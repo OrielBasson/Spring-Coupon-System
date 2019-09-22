@@ -30,15 +30,5 @@ Main purpose - learn and test Java full stack technologies.
 
 ## Configuration:
 
-The project base on Apache Derby Database, therfore to build the project, <br />
-a lib folder need to be added to your path with apache derby drivers such as:
-
-```
- Derby.jar
-```
-&
-```
-Derbyclient.jar
-```
-
+// TO DO
  
