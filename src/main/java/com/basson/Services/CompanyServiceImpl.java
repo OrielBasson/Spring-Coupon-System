@@ -27,31 +27,35 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void addCoupon(Coupon coupon) throws Exception {
-
+       couponRepository.save(coupon);
     }
 
     @Override
     public void removeCoupon(Coupon coupon) throws Exception {
-
+        couponRepository.delete(coupon);
     }
 
     @Override
     public void updateCoupon(Coupon coupon) throws Exception {
-
+      couponRepository.save(coupon);
     }
 
     @Override
-    public Company getCompany() throws Exception {
-        return null;
+    public Company getCompany(long companyId) throws Exception {
+       Company company = companyRepository.findByCompanyId(companyId);
+       return  company;
     }
 
     @Override
     public Coupon getCoupon(long couponId) throws Exception {
-        return null;
+        Coupon coupon = couponRepository.findByCouponId(couponId);
+        return coupon;
     }
 
     @Override
-    public List<Coupon> getAllCompanyCoupons() throws Exception {
-        return null;
+    public List<Coupon> getAllCompanyCoupons(Company company) throws Exception {
+        List<Coupon> coupons = couponRepository.findAllByCompanyId(company.getCompanyId());
+        return coupons;
     }
+
 }

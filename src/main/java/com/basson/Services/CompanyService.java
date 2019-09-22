@@ -14,10 +14,10 @@ public interface CompanyService {
 
     public void updateCoupon(Coupon coupon) throws Exception;
 
-    public Company getCompany() throws Exception;
+    public Company getCompany(long companyId) throws Exception;
 
     public Coupon getCoupon(long couponId) throws Exception;
 
-    public List<Coupon> getAllCompanyCoupons() throws  Exception;
+    public List<Coupon> getAllCompanyCoupons(Company company) throws  Exception;
 
 }
