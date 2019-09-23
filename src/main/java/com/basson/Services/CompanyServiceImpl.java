@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CompanyServiceImpl implements CompanyService {
+public class CompanyServiceImpl implements CompanyService, CouponClient{
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -48,7 +48,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Coupon getCoupon(long couponId) throws Exception {
-        Coupon coupon = couponRepository.findByCouponId(couponId);
+        Coupon coupon = couponRepository.findById(couponId);
         return coupon;
     }
 
@@ -56,6 +56,11 @@ public class CompanyServiceImpl implements CompanyService {
     public List<Coupon> getAllCompanyCoupons(Company company) throws Exception {
         List<Coupon> coupons = couponRepository.findAllByCompanyId(company.getCompanyId());
         return coupons;
+    }
+
+    @Override
+    public CouponClient login(String userName, String password, ClientType clientType) {
+        return null;
     }
 
 }

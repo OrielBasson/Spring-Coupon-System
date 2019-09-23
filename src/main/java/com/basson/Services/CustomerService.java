@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface CustomerService {
 
-    public Customer getCustomer() throws Exception;
+    public Customer getCustomer(long customerId) throws Exception;
 
-    public void purchaseCoupon(long couponId) throws  Exception;
+    public void purchaseCoupon(Coupon coupon) throws  Exception;
 
-    public List<Coupon> getAllPurchaseCoupons() throws Exception;
+    public List<Coupon> getAllPurchaseCoupons(Customer customer) throws Exception;
 
     public List<Coupon> getAllAvailableCoupons() throws Exception;
 

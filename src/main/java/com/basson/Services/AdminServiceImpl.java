@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl implements AdminService, CouponClient{
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -89,4 +89,10 @@ public class AdminServiceImpl implements AdminService {
         List<Customer> customers = customerRepository.findAll();
         return customers;
     }
+
+    @Override
+    public CouponClient login(String userName, String password, ClientType clientType) {
+        return null;
+    }
+
 }

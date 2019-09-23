@@ -20,15 +20,21 @@ public class Customer {
     private long id;
 
     @Basic(optional = false)
-    @Column(nullable = false)
+    @Column(nullable = false , unique = true)
     private String customerName;
 
     @Basic(optional = false)
     @Column(nullable = false)
     private String password;
 
-//    @ToString.Exclude
-//    @OneToMany
-//    private List<Coupon> coupons = new ArrayList<>();
+    @ToString.Exclude
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @MapKey(name="couponId")
+    @JoinTable(
+            name = "Customer_Coupon",
+            joinColumns = { @JoinColumn(name= "customer_id") },
+            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
+    )
+    private List<Coupon> coupons = new ArrayList<>();
 
 }
