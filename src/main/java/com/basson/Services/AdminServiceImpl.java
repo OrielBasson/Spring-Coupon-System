@@ -94,5 +94,4 @@ public class AdminServiceImpl implements AdminService, CouponClient{
     public CouponClient login(String userName, String password, ClientType clientType) {
         return null;
     }
-
 }

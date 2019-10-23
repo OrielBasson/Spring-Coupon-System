@@ -20,7 +20,9 @@ public class Customer {
     private long id;
 
     @Basic(optional = false)
-    @Column(nullable = false , unique = true)
+//    @Column(nullable = false , unique = true)
+    @Column(nullable = false)
+
     private String customerName;
 
     @Basic(optional = false)

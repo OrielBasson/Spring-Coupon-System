@@ -20,7 +20,8 @@ public class Coupon {
     private long id;
 
     @Basic(optional = false)
-    @Column(nullable = false , unique = true)
+    //@Column(nullable = false , unique = true)
+    @Column(nullable = false)
     private @NonNull String title;
 
     @Basic(optional = false)

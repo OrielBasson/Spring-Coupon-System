@@ -19,7 +19,8 @@ public class Company {
     private long companyId;
 
     @Basic(optional = false)
-    @Column(nullable = false , unique = true)
+//    @Column(nullable = false , unique = true)
+    @Column(nullable = false)
     private String compName;
 
     @Basic(optional = false)
