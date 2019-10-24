@@ -2,6 +2,7 @@ package com.basson.Controllers;
 
 import com.basson.JavaBeans.ClientType;
 import com.basson.JavaBeans.Company;
+import com.basson.JavaBeans.Customer;
 import com.basson.Services.AdminService;
 import com.basson.Utilities.LoginMethod;
 import com.basson.Utilities.Validations;
@@ -37,15 +38,14 @@ public class AdminController {
         if(adminService != null) {
             if (company != null ) {
                 adminService.addCompany(company);
-                ResponseEntity<?> result = new ResponseEntity<>("Added company successfully",HttpStatus.OK);
-                return result;
+                return new ResponseEntity<>("Added company successfully",HttpStatus.OK);
             } else {
-                ResponseEntity<?> result = new ResponseEntity<>("Added company Failed",HttpStatus.BAD_REQUEST);
-                return result;
+                return new ResponseEntity<>("Added company Failed",HttpStatus.BAD_REQUEST);
+
             }
         } else{
-            ResponseEntity<?> unauthorized = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            return unauthorized;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         }
     }
 
@@ -56,11 +56,9 @@ public class AdminController {
     	    AdminService adminService = getService();
     	    if(adminService != null){
                 List<Company> companies = adminService.getAllCompanies();
-                ResponseEntity<List<Company>> result = new ResponseEntity<>(companies, HttpStatus.OK);
-                return result;
+                return new ResponseEntity<>(companies, HttpStatus.OK);
     	    } else {
-                ResponseEntity<?> unauthorized = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-                return unauthorized;
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
     }
 
@@ -77,8 +75,8 @@ public class AdminController {
                 return new ResponseEntity<>("Wrong company id" ,HttpStatus.BAD_REQUEST);
             }
         } else {
-            ResponseEntity<?> unauthorized = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            return unauthorized;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         }
     }
 
@@ -94,11 +92,9 @@ public class AdminController {
             } else {
                 return new ResponseEntity<>("Removed Company Failed" ,HttpStatus.BAD_REQUEST);
             }
-            ResponseEntity<?> result = new ResponseEntity<>("Removed Company Successfully" ,HttpStatus.OK);
-            return result;
+            return new ResponseEntity<>("Removed Company Successfully" ,HttpStatus.OK);
         } else {
-            ResponseEntity<?> unauthorized = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            return unauthorized;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -143,9 +139,110 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/createCustomer")
+    public ResponseEntity<?> createCustomer(@RequestBody Customer customer) throws Exception{
+
+        AdminService adminService = getService();
+        if(adminService != null) {
+            if (customer != null ) {
+                adminService.addCustomer(customer);
+                return new ResponseEntity<>("Added customer " + customer.getCustomerName() + " successfully",HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Added customer Failed",HttpStatus.BAD_REQUEST);
+            }
+        } else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/getAllCustomers")
+    public ResponseEntity<?> getAllCustomers() throws Exception {
+        AdminService adminService = getService();
+        if(adminService != null){
+            List<Customer> customers = adminService.getAllCustomers();
+            return new ResponseEntity<>(customers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
+    @GetMapping("/getCustomer/{customerId}")
+    public ResponseEntity<?> getCustomer(@PathVariable("customerId") long customerId) throws Exception {
 
+        AdminService adminService = getService();
+        if(adminService != null){
+            Customer customer = null;
+            customer = adminService.getCustomer(customerId);
+            if(customer != null ){
+                return new ResponseEntity<>(customer ,HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Wrong Customer id" ,HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @DeleteMapping("/removeCustomer/{customerId}")
+    public ResponseEntity<?> removeCustomer(@PathVariable("customerId") long customerId) throws Exception {
+
+        AdminService adminService = getService();
+        if(adminService != null){
+            Customer customer= null;
+            customer = adminService.getCustomer(customerId);
+            if(customer != null) {
+                adminService.removeCustomer(customer);
+            } else {
+                return new ResponseEntity<>("Removed Customer Failed" ,HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Removed Customer Successfully" ,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/updateCustomer")
+    public ResponseEntity<?> updateCustomer (@RequestBody String customerJson) throws Exception{
+
+        AdminService adminService = getService();
+        if ( adminService != null) {
+            Gson gson = new Gson();
+            Customer jsonCustomer = gson.fromJson(customerJson, Customer.class);
+
+            //Print TEST - that all data was parse correctly from the json sent from the Client
+            System.out.println(jsonCustomer.getCustomerName() + " " + jsonCustomer.getPassword() + " " + jsonCustomer.getId());
+
+            if (jsonCustomer.getId() >= 0) {
+                if (Validations.checkIfCustomerExist(adminService.getCustomer(jsonCustomer.getId()))) {
+                    Customer customer = adminService.getCustomer(jsonCustomer.getId());
+                    if (customer != null) {
+                        if (jsonCustomer.getCustomerName() != null && !jsonCustomer.getCustomerName().isEmpty()) {
+                            customer.setCustomerName(jsonCustomer.getCustomerName());
+                            adminService.updateCustomer(customer);
+                        } else {
+                            return new ResponseEntity<>(" Invalid new customer name inserted " ,HttpStatus.BAD_REQUEST);
+                        }
+                        if (jsonCustomer.getPassword() != null && !jsonCustomer.getPassword().isEmpty()) {
+                            customer.setPassword(jsonCustomer.getPassword());
+                            adminService.updateCustomer(customer);
+                        } else {
+                            return new ResponseEntity<>(" Invalid new password inserted " ,HttpStatus.BAD_REQUEST);
+                        }
+                    } else {
+                        return new ResponseEntity<>(" Customer does not exist , Invalid customer details inserted " ,HttpStatus.BAD_REQUEST);
+                    }
+                    return new ResponseEntity<>("SUCCEED TO UPDATE CUSTOMER ID: " + customer.getId() ,HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("The id that inserted is not valid, please try again." ,HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>("The id that inserted is not valid, please try again. " ,HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
 
