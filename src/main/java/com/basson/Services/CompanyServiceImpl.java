@@ -25,6 +25,8 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
 
     private ClientType clientType = ClientType.COMPANY;
 
+    private Company company;
+
     @Override
     public void addCoupon(Coupon coupon) throws Exception {
        couponRepository.save(coupon);
@@ -57,6 +59,11 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
         List<Coupon> coupons = couponRepository.findAllByCompanyId(company.getCompanyId());
         return coupons;
     }
+
+    @Override
+    public void setCompany(Company company) {
+            this.company = company;
+        }
 
     @Override
     public CouponClient login(String userName, String password, ClientType clientType) {

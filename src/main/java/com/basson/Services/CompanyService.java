@@ -20,4 +20,6 @@ public interface CompanyService {
 
     public List<Coupon> getAllCompanyCoupons(Company company) throws  Exception;
 
+    public void setCompany(Company company);
+
 }

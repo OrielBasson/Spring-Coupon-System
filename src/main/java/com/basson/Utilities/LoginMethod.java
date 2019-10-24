@@ -1,6 +1,7 @@
 package com.basson.Utilities;
 import com.basson.JavaBeans.Company;
 import com.basson.Services.*;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 
@@ -8,9 +9,11 @@ import com.basson.JavaBeans.ClientType;
 import com.basson.Repositories.CompanyRepository;
 import com.basson.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LoginMethod {
 
     @Autowired
@@ -39,6 +42,16 @@ public class LoginMethod {
                         throw new Exception("invalid details for Admin user. ");
                     }
                 case COMPANY:
+                    Company company = companyRepository.findByCompNameAndPassword(userName, password);
+                    if (company != null) {
+                        CompanyService companyServiceBean = ctx.getBean(CompanyServiceImpl.class);
+                        companyServiceBean.setCompany(company);
+                        System.out.println("Company " + company.getCompName() + " logged in to system");
+                        return (CouponClient) companyServiceBean;
+                    } else {
+                        System.out.println("null after inputs  (LoginMethod.Class)  ");
+                        return null;
+                    }
 
 
             }
