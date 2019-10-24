@@ -91,6 +91,11 @@ public class CustomerServiceImpl implements CustomerService , CouponClient {
     }
 
     @Override
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    @Override
     public CouponClient login(String userName, String password, ClientType clientType) {
         return null;
     }

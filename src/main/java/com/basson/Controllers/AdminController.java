@@ -1,10 +1,8 @@
 package com.basson.Controllers;
 
-import com.basson.JavaBeans.ClientType;
 import com.basson.JavaBeans.Company;
 import com.basson.JavaBeans.Customer;
 import com.basson.Services.AdminService;
-import com.basson.Utilities.LoginMethod;
 import com.basson.Utilities.Validations;
 import com.google.gson.Gson;
 
@@ -13,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -21,15 +20,19 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    private LoginMethod loginMethod;
+    private HttpServletRequest request;
 
-    	private AdminService getService() throws  Exception {
-            AdminService admin = null;
-			admin = (AdminService) loginMethod.login("admin", "1234", ClientType.ADMIN);
-            System.out.println(admin);
-			return admin;
-	}
-
+    private AdminService getService() throws  Exception {
+        try {
+            AdminService adminService = null;
+            adminService = (AdminService) request.getSession(false).getAttribute("service");
+            System.out.println("Print Test from the controller .....   " + adminService);
+            return adminService;
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
 
     @PostMapping("/createCompany")
     public ResponseEntity<?> createCompany(@RequestBody Company company) throws Exception{
@@ -44,7 +47,7 @@ public class AdminController {
 
             }
         } else{
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
 
         }
     }
@@ -54,11 +57,12 @@ public class AdminController {
     public ResponseEntity<?> getAllCompanies() throws Exception{
 
     	    AdminService adminService = getService();
+        System.out.println(adminService);
     	    if(adminService != null){
                 List<Company> companies = adminService.getAllCompanies();
                 return new ResponseEntity<>(companies, HttpStatus.OK);
     	    } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
             }
     }
 
@@ -75,7 +79,7 @@ public class AdminController {
                 return new ResponseEntity<>("Wrong company id" ,HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
 
         }
     }
@@ -94,7 +98,7 @@ public class AdminController {
             }
             return new ResponseEntity<>("Removed Company Successfully" ,HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -151,7 +155,7 @@ public class AdminController {
                 return new ResponseEntity<>("Added customer Failed",HttpStatus.BAD_REQUEST);
             }
         } else{
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -162,7 +166,7 @@ public class AdminController {
             List<Customer> customers = adminService.getAllCustomers();
             return new ResponseEntity<>(customers, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -180,7 +184,7 @@ public class AdminController {
                 return new ResponseEntity<>("Wrong Customer id" ,HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -198,7 +202,7 @@ public class AdminController {
             }
             return new ResponseEntity<>("Removed Customer Successfully" ,HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -240,7 +244,7 @@ public class AdminController {
                 return new ResponseEntity<>("The id that inserted is not valid, please try again. " ,HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
     }
 

@@ -1,37 +1,34 @@
 package com.basson.Controllers;
 
-import com.basson.JavaBeans.ClientType;
-import com.basson.Services.AdminService;
 import com.basson.Services.CompanyService;
 import com.basson.Utilities.LoginMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
 
-    @Resource
-    private LoginMethod loginMethod;
+    @Autowired
+    private HttpServletRequest request;
 
     private CompanyService getService() throws  Exception {
-        CompanyService company = null;
-        company = (CompanyService) loginMethod.login("admin", "1234", ClientType.ADMIN);
-        return company;
+        try {
+            CompanyService companyService = null;
+            companyService = (CompanyService) request.getSession(false).getAttribute("service");
+            System.out.println("Print Test from the controller .....   " + companyService);
+            return companyService;
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+            return null;
+        }
     }
 
-//
-//    private CompanyService getCompanyService() {
-//        try {
-//            CompanyService companyService = null;
-//            companyService = (CompanyService) request.getSession(false).getAttribute("facade");
-//            return companyService;
-//        } catch (Exception e){
-//            return null;
-//        }
-//    }
+
+
 
 
 }

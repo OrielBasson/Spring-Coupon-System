@@ -1,5 +1,6 @@
 package com.basson.Utilities;
 import com.basson.JavaBeans.Company;
+import com.basson.JavaBeans.Customer;
 import com.basson.Services.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -52,8 +53,17 @@ public class LoginMethod {
                         System.out.println("null after inputs  (LoginMethod.Class)  ");
                         return null;
                     }
-
-
+                case CUSTOMER:
+                    Customer customer = customerRepository.findByCustomerNameAndAndPassword(userName, password);
+                    if (customer != null) {
+                        CustomerService customerServiceBean = ctx.getBean(CustomerServiceImpl.class);
+                        customerServiceBean.setCustomer(customer);
+                        System.out.println("Customer " + customer.getCustomerName() + " logged in to system");
+                        return (CouponClient) customerServiceBean;
+                    } else {
+                        System.out.println("null after inputs  (LoginMethod.Class)  ");
+                        return null;
+                    }
             }
         } catch (Exception e){
             System.out.println(e.getCause());

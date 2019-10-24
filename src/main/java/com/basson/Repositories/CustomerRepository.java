@@ -12,7 +12,7 @@ public interface CustomerRepository extends JpaRepository <Customer , Long> {
 
     public Customer findCustomerByCustomerName(String customerName);
 
-    public Customer findCustomerByCustomerNameAndPassword(String name, String password);
+    public Customer findByCustomerNameAndAndPassword(String name, String password);
 
     public boolean existsById(long id);
 
