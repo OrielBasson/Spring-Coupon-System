@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
 
 
 @RestController
-public class LoginSession {
+public class LoginController {
 
     @Autowired
     private LoginMethod loginMethod;

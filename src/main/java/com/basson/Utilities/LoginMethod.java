@@ -29,7 +29,7 @@ public class LoginMethod {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public CouponClient login(String userName, String password, ClientType clientType) throws Exception {
+    public CouponClient login(String userName, String password, ClientType clientType){
 
         try {
             switch (clientType) {
@@ -40,7 +40,8 @@ public class LoginMethod {
                         System.out.println("adminServiceBean syso ..." + adminServiceBean);
                         return (CouponClient) adminServiceBean;
                     } else {
-                        throw new Exception("invalid details for Admin user. ");
+                            System.out.println("null after inputs  (LoginMethod.Class)  ");
+                            return null;
                     }
                 case COMPANY:
                     Company company = companyRepository.findByCompNameAndPassword(userName, password);
