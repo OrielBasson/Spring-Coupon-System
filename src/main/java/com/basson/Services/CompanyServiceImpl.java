@@ -53,7 +53,7 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
     @Override
     public Coupon getCoupon(long couponId) throws Exception {
         Coupon requestedCoupon = couponRepository.findById(couponId);
-        List<Coupon> companyCoupons = getAllCompanyCoupons(getCompany());
+        List<Coupon> companyCoupons = getAllCompanyCoupons();
         for(Iterator<Coupon> iterator = companyCoupons.iterator(); iterator.hasNext(); ) {
             Coupon companyCoupon = iterator.next();
             if (companyCoupon.getId() == requestedCoupon.getId()){
@@ -64,7 +64,7 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
     }
 
     @Override
-    public List<Coupon> getAllCompanyCoupons(Company company) throws Exception {
+    public List<Coupon> getAllCompanyCoupons() throws Exception {
         List<Coupon> coupons = couponRepository.findAllByCompanyId(getCompany().getCompanyId());
         return coupons;
     }

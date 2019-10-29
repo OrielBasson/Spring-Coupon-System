@@ -160,9 +160,6 @@ public class CompanyController {
         } else {
             return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
-    }
-
-
-
+     }
 
     }

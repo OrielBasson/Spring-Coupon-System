@@ -18,7 +18,7 @@ public interface CompanyService {
 
     public Coupon getCoupon(long couponId) throws Exception;
 
-    public List<Coupon> getAllCompanyCoupons(Company company) throws  Exception;
+    public List<Coupon> getAllCompanyCoupons() throws  Exception;
 
     public void setCompany(Company company);
 
