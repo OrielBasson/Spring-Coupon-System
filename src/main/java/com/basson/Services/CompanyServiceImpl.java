@@ -9,6 +9,8 @@ import com.basson.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -50,13 +52,20 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
 
     @Override
     public Coupon getCoupon(long couponId) throws Exception {
-        Coupon coupon = couponRepository.findById(couponId);
-        return coupon;
+        Coupon requestedCoupon = couponRepository.findById(couponId);
+        List<Coupon> companyCoupons = getAllCompanyCoupons(getCompany());
+        for(Iterator<Coupon> iterator = companyCoupons.iterator(); iterator.hasNext(); ) {
+            Coupon companyCoupon = iterator.next();
+            if (companyCoupon.getId() == requestedCoupon.getId()){
+                return requestedCoupon;
+            }
+        }
+        return null;
     }
 
     @Override
     public List<Coupon> getAllCompanyCoupons(Company company) throws Exception {
-        List<Coupon> coupons = couponRepository.findAllByCompanyId(company.getCompanyId());
+        List<Coupon> coupons = couponRepository.findAllByCompanyId(getCompany().getCompanyId());
         return coupons;
     }
 
@@ -64,6 +73,11 @@ public class CompanyServiceImpl implements CompanyService, CouponClient{
     public void setCompany(Company company) {
             this.company = company;
         }
+
+    @Override
+    public Company getCompany() {
+        return this.company;
+    }
 
     @Override
     public CouponClient login(String userName, String password, ClientType clientType) {

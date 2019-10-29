@@ -22,4 +22,6 @@ public interface CompanyService {
 
     public void setCompany(Company company);
 
+    public Company getCompany();
+
 }

@@ -1,10 +1,14 @@
 package com.basson.Controllers;
 
+import com.basson.JavaBeans.Coupon;
+import com.basson.JavaBeans.Customer;
 import com.basson.Services.CompanyService;
+import com.basson.Utilities.DateConverters;
 import com.basson.Utilities.LoginMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +23,6 @@ public class CompanyController {
         try {
             CompanyService companyService = null;
             companyService = (CompanyService) request.getSession(false).getAttribute("service");
-            System.out.println("Print Test from the controller .....   " + companyService);
             return companyService;
         } catch (Exception ex){
             System.out.println(ex.getMessage());
@@ -27,6 +30,73 @@ public class CompanyController {
         }
     }
 
+    @GetMapping("/getCoupon/{couponId}")
+    public ResponseEntity<?> getCouponById(@PathVariable("couponId") long couponId) throws Exception {
+        CompanyService companyService = getService();
+        if(companyService != null) {
+            Coupon coupon = companyService.getCoupon(couponId);
+            if(coupon != null) {
+                return new ResponseEntity<>(coupon, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("This company don't own this coupon" , HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/addCoupon")
+    public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon)throws Exception{
+        CompanyService companyService = getService();
+        if(companyService != null ){
+
+            Coupon couponToAdd = new Coupon();
+
+            if (coupon.getTitle() != null && coupon.getTitle() != "") {
+                couponToAdd.setTitle(coupon.getTitle());
+            } else {
+                return new ResponseEntity<>("Invalid coupon title!",HttpStatus.BAD_REQUEST);
+            }
+            if (coupon.getAmount() > 0) {
+                couponToAdd.setAmount(coupon.getAmount());
+            } else {
+                return new ResponseEntity<>("Invalid coupon amount!",HttpStatus.BAD_REQUEST);
+            }
+            if (coupon.getType() != null) {
+                couponToAdd.setType(coupon.getType());
+            } else {
+                return new ResponseEntity<>("Invalid coupon type",HttpStatus.BAD_REQUEST);
+            }
+            if (coupon.getMessage() != null && coupon.getMessage() != "") {
+                couponToAdd.setMessage(coupon.getMessage());
+            } else {
+                return new ResponseEntity<>("Invalid coupon message",HttpStatus.BAD_REQUEST);
+            }
+            if (coupon.getPrice() > 0) {
+                couponToAdd.setPrice(coupon.getPrice());
+            } else {
+                return new ResponseEntity<>("Invalid coupon price!",HttpStatus.BAD_REQUEST);
+            }
+            if (coupon.getImage() != null && coupon.getImage() != "") {
+                couponToAdd.setImage(coupon.getImage());
+            } else {
+                return new ResponseEntity<>("Invalid coupon image!",HttpStatus.BAD_REQUEST);
+            }
+            couponToAdd.setCompanyId(companyService.getCompany().getCompanyId());
+            couponToAdd.setStartDate(DateConverters.getCurrentDate());
+            couponToAdd.setEndDate(DateConverters.getExpiredDate());
+            couponToAdd.setActive(true);
+
+            if(couponToAdd != null){
+                companyService.addCoupon(couponToAdd);
+                return new ResponseEntity<>("Coupon Added Successfully " ,HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to add new Coupon !",HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
 
