@@ -1,5 +1,6 @@
 package com.basson.Controllers;
 
+import com.basson.JavaBeans.Company;
 import com.basson.JavaBeans.Coupon;
 import com.basson.JavaBeans.Customer;
 import com.basson.Services.CompanyService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/company")
@@ -40,6 +42,17 @@ public class CompanyController {
             } else {
                 return new ResponseEntity<>("This company don't own this coupon" , HttpStatus.UNAUTHORIZED);
             }
+        } else {
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/getAllCompanyCoupons")
+    public ResponseEntity<?> getAllCompanyCoupons() throws Exception{
+        CompanyService companyService = getService();
+        if(companyService != null) {
+            List<Coupon> coupons = companyService.getAllCompanyCoupons();
+            return new ResponseEntity<>(coupons , HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
         }
@@ -99,6 +112,57 @@ public class CompanyController {
     }
 
 
+    @PostMapping("/updateCoupon/{couponId}")
+    public ResponseEntity<?> updateCoupon(@PathVariable("couponId") long couponId , @RequestBody Coupon coupon) throws Exception {
+        CompanyService companyService = getService();
+        if(companyService != null){
+            Coupon couponToUpdate = companyService.getCoupon(couponId);
+            if(couponToUpdate != null){
+                if (coupon.getTitle() != null && coupon.getTitle() != "") {
+                    couponToUpdate.setTitle(coupon.getTitle());
+                }
+                if (coupon.getAmount() > 0) {
+                    couponToUpdate.setAmount(coupon.getAmount());
+                }
+                if (coupon.getType() != null) {
+                    couponToUpdate.setType(coupon.getType());
+                }
+                if (coupon.getMessage() != null && coupon.getMessage() != "") {
+                    couponToUpdate.setMessage(coupon.getMessage());
+                }
+                if (coupon.getPrice() > 0) {
+                    couponToUpdate.setPrice(coupon.getPrice());
+                }
+                if (coupon.getImage() != null && coupon.getImage() != "") {
+                    couponToUpdate.setImage(coupon.getImage());
+                }
+                companyService.updateCoupon(couponToUpdate);
+                return new ResponseEntity<>("Coupon Updated Successfully" ,HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("This company don't own this coupon" , HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @DeleteMapping("/removeCoupon/{couponId}")
+    public ResponseEntity<?> removeCoupon(@PathVariable("couponId") long couponId) throws Exception {
+        CompanyService companyService = getService();
+        if(companyService != null){
+            Coupon couponToRemove = companyService.getCoupon(couponId);
+            if (couponToRemove != null){
+                companyService.removeCoupon(couponToRemove);
+                return new ResponseEntity<>("Coupon Removed Successfully" ,HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("This company don't own this coupon" , HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Unauthorized" , HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
-}
+
+
+    }
