@@ -21,7 +21,7 @@ public class LogoutController {
     public ResponseEntity<?> logout() {
         try {
             HttpSession session = request.getSession();
-            session.removeAttribute("facade");
+            session.removeAttribute("service");
             session.invalidate();
             System.out.println("Logout DEBUG");
             return new ResponseEntity<>("You logged out successfully !", HttpStatus.OK);

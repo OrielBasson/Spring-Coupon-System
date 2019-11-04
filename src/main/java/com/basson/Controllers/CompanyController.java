@@ -2,6 +2,7 @@ package com.basson.Controllers;
 
 import com.basson.JavaBeans.Company;
 import com.basson.JavaBeans.Coupon;
+import com.basson.JavaBeans.CouponType;
 import com.basson.JavaBeans.Customer;
 import com.basson.Services.CompanyService;
 import com.basson.Utilities.DateConverters;
@@ -97,6 +98,7 @@ public class CompanyController {
             }
             couponToAdd.setCompanyId(companyService.getCompany().getCompanyId());
             couponToAdd.setStartDate(DateConverters.getCurrentDate());
+            System.out.println(DateConverters.getCurrentDate());
             couponToAdd.setEndDate(DateConverters.getExpiredDate());
             couponToAdd.setActive(true);
 

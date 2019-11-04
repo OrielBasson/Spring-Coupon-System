@@ -30,13 +30,13 @@ public class Customer {
     private String password;
 
     @ToString.Exclude
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-    @MapKey(name="couponId")
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "Customer_Coupon",
             joinColumns = { @JoinColumn(name= "customer_id") },
             inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
     )
     private List<Coupon> coupons = new ArrayList<>();
+
 
 }

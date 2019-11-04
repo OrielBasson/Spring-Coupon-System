@@ -29,7 +29,6 @@ public class AdminController {
             System.out.println("Print Test from the controller .....   " + adminService);
             return adminService;
         } catch (Exception ex){
-            System.out.println(ex.getMessage());
             return null;
         }
     }
@@ -40,10 +39,14 @@ public class AdminController {
         AdminService adminService = getService();
         if(adminService != null) {
             if (company != null ) {
-                adminService.addCompany(company);
-                return new ResponseEntity<>("Added company successfully",HttpStatus.OK);
+                if (!Validations.checkIfCompanyExist(company)) {
+                    adminService.addCompany(company);
+                    return new ResponseEntity<>("Added company successfully", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Failed to create company - company name already exist",HttpStatus.BAD_REQUEST);
+                }
             } else {
-                return new ResponseEntity<>("Added company Failed",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Failed to create company",HttpStatus.BAD_REQUEST);
 
             }
         } else{

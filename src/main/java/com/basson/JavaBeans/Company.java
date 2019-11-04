@@ -13,7 +13,7 @@ import java.util.List;
 public class Company {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(nullable = false)
     private long companyId;
@@ -32,7 +32,16 @@ public class Company {
     private String email;
 
 //    @ToString.Exclude
-//    @OneToMany
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
 //    private List<Coupon> coupons = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "Company_Coupon",
+            joinColumns = { @JoinColumn(name= "company_id") },
+            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
+    )
+    private List<Coupon> coupons = new ArrayList<>();
 
 }

@@ -3,6 +3,7 @@ package com.basson.Utilities;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateConverters {
@@ -10,7 +11,6 @@ public class DateConverters {
     public static Date getCurrentDate() {
         LocalDate localDate = LocalDate.now();
         Date date = java.sql.Date.valueOf(localDate);
-
         return date;
     }
 

@@ -2,22 +2,28 @@ package com.basson.Services;
 
 import com.basson.JavaBeans.ClientType;
 import com.basson.JavaBeans.Coupon;
+import com.basson.JavaBeans.CouponType;
 import com.basson.JavaBeans.Customer;
 import com.basson.Repositories.CompanyRepository;
 import com.basson.Repositories.CouponRepository;
 import com.basson.Repositories.CustomerRepository;
+import org.hibernate.FlushMode;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CustomerServiceImpl implements CustomerService , CouponClient {
+
+
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -50,25 +56,22 @@ public class CustomerServiceImpl implements CustomerService , CouponClient {
 
             throw new Exception("Coupon Not Available");
         }
-        if (getAllPurchaseCoupons(this.customer).contains(couponFromDB)) {
+        if (getAllPurchaseCoupons().contains(couponFromDB)) {
             throw new Exception("Already bought");
         }
 
-        List<Coupon> customerCoupons = getAllPurchaseCoupons(this.customer);
+        List<Coupon> customerCoupons = getAllPurchaseCoupons();
         customerCoupons.add(coupon);
         this.customer.setCoupons(customerCoupons);
         customerRepository.save(this.customer);
         coupon.setAmount((coupon.getAmount() -1));
         couponRepository.save(coupon);
 
-
-        System.out.println("Customer " + customer.getCustomerName() + " purchased successfully Coupon " + coupon.getId());
-
     }
 
     @Override
     @Transactional
-    public List<Coupon> getAllPurchaseCoupons(Customer customer) throws Exception {
+    public List<Coupon> getAllPurchaseCoupons() throws Exception {
         List<Coupon> coupons = customerRepository.findById(this.customer.getId()).get().getCoupons();
         return coupons;
     }
@@ -77,8 +80,9 @@ public class CustomerServiceImpl implements CustomerService , CouponClient {
     @Transactional
     public List<Coupon> getAllAvailableCoupons() throws Exception {
         List<Coupon> allCoupons = couponRepository.findAll();
-        List<Coupon> myCoupons = getAllPurchaseCoupons(this.customer);
-        allCoupons.removeIf(coupon -> myCoupons.removeIf(coupon2 -> coupon.getId() == coupon2.getId()));
+        List<Coupon> customerCoupons = getAllPurchaseCoupons();
+        allCoupons.removeAll(customerCoupons);
+
         List<Coupon> notMyCoupons = allCoupons;
         for(Iterator<Coupon> iterator = notMyCoupons.iterator(); iterator.hasNext() ;){
             Coupon coupon = iterator.next();
@@ -91,12 +95,44 @@ public class CustomerServiceImpl implements CustomerService , CouponClient {
     }
 
     @Override
+    @Transactional
+    public List<Coupon> getAllAvailableCouponsByType(CouponType couponType) throws Exception {
+        List<Coupon> allAvailableCoupons = getAllAvailableCoupons();
+        for(Iterator<Coupon> iterator = allAvailableCoupons.iterator() ; iterator.hasNext() ;){
+            Coupon coupon = iterator.next();
+            if (coupon.getType() != couponType){
+                iterator.remove();
+            }
+        }
+        return allAvailableCoupons;
+    }
+
+    @Override
+    @Transactional
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
     @Override
+    @Transactional
     public CouponClient login(String userName, String password, ClientType clientType) {
         return null;
     }
+
+    @Override
+    @Transactional
+    public Coupon getAvailableCouponById(long couponId) throws Exception {
+        Coupon requestedCoupon = couponRepository.findById(couponId);
+        Collection<Coupon> coupons = getAllAvailableCoupons();
+        for(Iterator<Coupon> iterator = coupons.iterator() ; iterator.hasNext() ;){
+            Coupon coupon = iterator.next();
+            if (coupon.getId() == requestedCoupon.getId()){
+                return requestedCoupon;
+            }
+        }
+        System.out.println("Can't get coupon - not available for this user.");
+        return null;
+    }
+
+
 }

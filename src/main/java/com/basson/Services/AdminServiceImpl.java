@@ -91,6 +91,7 @@ public class AdminServiceImpl implements AdminService, CouponClient{
     }
 
     @Override
+    @Transactional
     public CouponClient login(String userName, String password, ClientType clientType) {
         return null;
     }

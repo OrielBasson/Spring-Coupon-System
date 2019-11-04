@@ -41,20 +41,22 @@ public class LoginController {
             CouponClient service = loginMethod.login(userLogin.getUsername(), userLogin.getPassword(), clientType);
 
              HttpSession session = request.getSession(false);
+            System.out.println("syso session... " + request.getSession());
 
             if (session != null) {
                 session.invalidate(); // killing the session if exist
             }
 
             request.getSession(true); // // create a new session for a new client
-
             if (service != null) {
-                System.out.println("Facade debug - OK");
+                System.out.println("login is good ... ");
 
                 // updating the session with the login facade
+                System.out.println("***************   LoginController "  + service);
                 request.getSession().setAttribute("service", service);
 
-                Cookie cookie = new Cookie("Set-Cookie" , "JSESSIONID="+request.getSession().getId()+";path=/; HttpOnly; domain=/localhost; secure=false;" );                cookie.setComment(type);
+                Cookie cookie = new Cookie("Set-Cookie" , "JSESSIONID="+request.getSession().getId()+";path=/; HttpOnly; domain=/localhost; secure=false;" );
+                cookie.setComment(type);
                 String goodResponse = new Gson().toJson(cookie);
 
                 switch (clientType) {

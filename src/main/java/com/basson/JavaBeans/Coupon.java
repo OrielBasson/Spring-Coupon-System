@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.*;
@@ -12,6 +14,8 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 public class Coupon {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,25 +65,35 @@ public class Coupon {
     @Column(nullable = false)
     private @NonNull boolean isActive;
 
+//    @ToString.Exclude
+//    @ManyToOne
+//    private Company company;
+//
+//    @ToString.Exclude
+//    @ManyToMany(mappedBy = "coupons")
+//    @MapKey(name="id")
+//    private Map<Long,Customer> customers = new HashMap<>();
 
-    @ToString.Exclude
-    @ManyToOne
-    @JoinTable(
-            name = "Company_Coupon",
-            joinColumns = { @JoinColumn(name= "company_id") },
-            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
-    )
-    private Company company;
+
+//    @ToString.Exclude
+//    @ManyToOne
+//    @JoinTable(
+//            name = "Company_Coupon",
+//            joinColumns = { @JoinColumn(name= "company_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
+//    )
+//    private Company company;
 
 
-    @ToString.Exclude
-    @OneToMany
-    @JoinTable(
-            name = "Customer_Coupon",
-            joinColumns = { @JoinColumn(name= "customer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
-    )
-    private List<Customer> customers = new ArrayList<>();
+//    @ToString.Exclude
+//    @ManyToOne
+//    @JoinTable(
+//            name = "Customer_Coupon",
+//            joinColumns = { @JoinColumn(name= "customer_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "coupon_id") }
+//    )
+//    private List<Customer> customers = new ArrayList<>();
+
 
 
 }
