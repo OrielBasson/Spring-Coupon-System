@@ -24,7 +24,7 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "Origin, Authorization , X-Requested-With, Content-Type, Accept," +
                 " X-Auth-Token, Set-Cookie, Cookie , cache-control, JSESSIONID, Access-Control-Allow-Origin , Access-Control-Allow-Credentials ," +
                 "Access-Control-Max-Age");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        response.setHeader("Access-Control-Allow-Origin", "https://orielbasson.com");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Credentials", "true");

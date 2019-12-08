@@ -1,17 +1,16 @@
 package com.basson;
 
-import com.basson.JavaBeans.Company;
-import com.basson.Services.AdminService;
-import com.basson.Services.AdminServiceImpl;
+
+import com.basson.Services.MyEmailServiceImpl;
+import it.ozimov.springboot.mail.configuration.EnableEmailTools;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 
-
+@EnableEmailTools
 @SpringBootApplication
-public class CouponSystemApplication {
+public class CouponSystemApplication extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
 
         // ApplicationContext applicationContext = SpringApplication.run(CouponSystemApplication.class, args);
